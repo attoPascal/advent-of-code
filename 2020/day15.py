@@ -17,7 +17,7 @@ def play_game(starting_numbers, turns):
     mentions = {n: i for i, n in enumerate(starting_numbers[:-1])}
     
     with ChristmasProgress(console) as progress:
-        for i in progress.track(range(6, turns)):
+        for i in progress.track(range(s, turns)):
             prev = numbers[i-1]
             if prev not in mentions:
                 numbers[i] = 0
@@ -39,14 +39,12 @@ for task, turns in enumerate(turns):
         title="Turns",
         padding=(1, 2),
         style='magenta')
-    columns = Columns([panel1, panel2])
-    console.print(columns)
+    console.print(Columns([panel1, panel2]))
 
     result = play_game(starting_numbers, turns)
     panel3 = Panel.fit(
         Text(f"{result:.0f}", justify='center', style='bold'),
         title="Answer",
         padding=(1, 2),
-        style='red'
-    )
+        style='red')
     console.print(panel3)
