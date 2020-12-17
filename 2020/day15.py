@@ -1,4 +1,4 @@
-import numpy as np
+from array import array
 from rich.console import Console
 from rich.columns import Columns
 from rich.panel import Panel
@@ -10,20 +10,14 @@ starting_numbers = [8, 13, 1, 0, 18, 9]
 turns = [2020, 30_000_000]
 
 def play_game(starting_numbers, turns):
-    s = len(starting_numbers)
-    numbers = np.zeros(turns)
-    numbers[:] = np.nan
-    numbers[0:s] = starting_numbers
-    mentions = {n: i for i, n in enumerate(starting_numbers[:-1])}
+    start = len(starting_numbers)
+    numbers = array('i', starting_numbers + [0]*(turns-start))
+    mentions = {n: i for i, n in enumerate(starting_numbers)}
     
     with ChristmasProgress(console) as progress:
-        for i in progress.track(range(s, turns)):
+        for i in progress.track(range(start, turns)):
             prev = numbers[i-1]
-            if prev not in mentions:
-                numbers[i] = 0
-            else:
-                numbers[i] = i-1 - mentions[prev]
-                mentions[prev] = i-1
+            numbers[i] = i-1 - mentions.get(prev, i-1)
             mentions[prev] = i-1
     return numbers[turns-1]
 
@@ -43,7 +37,7 @@ for task, turns in enumerate(turns):
 
     result = play_game(starting_numbers, turns)
     panel3 = Panel.fit(
-        Text(f"{result:.0f}", justify='center', style='bold'),
+        Text(str(result), justify='center', style='bold'),
         title="Answer",
         padding=(1, 2),
         style='red')
