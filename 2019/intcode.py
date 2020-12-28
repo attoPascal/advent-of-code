@@ -1,3 +1,8 @@
+from collections import deque
+
+Input = deque
+Output = deque
+
 class Intcode():
     ops = {
         # op, num_reads, num_writes
@@ -17,7 +22,7 @@ class Intcode():
         self.memory = memory.copy() + [0]*extend_memory
         
         self.input = input.pop if hasattr(input, 'pop') else input
-        self.output = output.pop if hasattr(output, 'pop') else output
+        self.output = output.appendleft if hasattr(output, 'appendleft') else output
         
         self.ptr = 0
         self.base = 0
@@ -27,8 +32,7 @@ class Intcode():
     
     def run(self):
         while not self.halted:
-            self.fetch()
-            self.exec()
+            self.fetch_exec()
 
     def fetch(self):
         if not self.halted:
@@ -43,6 +47,10 @@ class Intcode():
                 self.halted = True
             else:
                 getattr(self, self.op)(*self.args)
+    
+    def fetch_exec(self):
+        self.fetch()
+        self.exec()
     
     def getargs(self, ptr):
         instr = self.memory[ptr]
