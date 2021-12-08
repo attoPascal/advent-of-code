@@ -21,8 +21,8 @@ class Intcode():
     def __init__(self, memory, input=None, output=None, extend_memory=1000):
         self.memory = memory.copy() + [0]*extend_memory
         
-        self.input = input.pop if hasattr(input, 'pop') else input
-        self.output = output.appendleft if hasattr(output, 'appendleft') else output
+        self.input = input.popleft if hasattr(input, 'pop') else input
+        self.output = output.append if hasattr(output, 'append') else output
         
         self.ptr = 0
         self.base = 0
