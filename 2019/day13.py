@@ -20,9 +20,9 @@ def run(part):
             break
 
         if len(output) >= 3:
-            x = output.pop()
-            y = output.pop()
-            t = output.pop()
+            x = output.popleft()
+            y = output.popleft()
+            t = output.popleft()
 
             if x == -1 and y == 0:
                 score = t
@@ -34,7 +34,7 @@ def run(part):
                     ball = x
                     input.append(np.sign(ball - paddle))
         else:
-            intcode.cycle()
+            intcode.fetch_exec()
 
     return screen, score
 
