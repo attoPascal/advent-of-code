@@ -1,0 +1,24 @@
+inp w   mul x 0   add x z   mod x 26   div z 1    add x 11   eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 1    mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 1    add x 10   eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 10   mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 1    add x 13   eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 2    mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 26   add x -10  eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 5    mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 1    add x 11   eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 6    mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 1    add x 11   eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 0    mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 1    add x 12   eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 16   mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 26   add x -11  eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 12   mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 26   add x -7   eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 15   mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 1    add x 13   eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 7    mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 26   add x -13  eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 6    mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 26   add x 0    eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 5    mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 26   add x -11  eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 6    mul y x   add z y   
+inp w   mul x 0   add x z   mod x 26   div z 26   add x 0    eql x w   eql x 0   mul y 0   add y 25   mul y x   add y 1   mul z y   mul y 0   add y w   add y 15   mul y x   add z y
+
+w <- inp
+x <- 0 if (z0 % 26) + add_x == w
+z <- (z0 // div_z) * (25x + 1) 
+y <- (w + add_y) * x
+z1 <- z + y
+
+div_z = [1, 1, 1, 26, 1, 1, 1, 26, 26, 1, 26, 26, 26, 26]
+add_x = [11, 10, 13, -10, 11, 11, 12, -11, -7, 13, -13, 0, -11, 0]
+add_y = [1, 10, 2, 5, 6, 0, 16, 12, 15, 7, 6, 5, 6, 15]
