@@ -31,7 +31,7 @@ def load_data():
 
 data = load_data()
 
-def points_part2(data=data):
+def points(data=data):
     num_members, num_days = data.shape
     points = pd.Series(0, index=data.index, dtype=int)
 
