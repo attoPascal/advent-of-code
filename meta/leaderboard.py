@@ -29,9 +29,7 @@ def load_data():
     df = pd.DataFrame.from_dict(time_diffs, orient='index', dtype='Int64')
     return df.sort_index(key=lambda x: x.str.lower()).sort_index(axis=1)
 
-data = load_data()
-
-def points(data=data):
+def points(data):
     num_members, num_days = data.shape
     points = pd.Series(0, index=data.index, dtype=int)
 
@@ -47,8 +45,11 @@ def points(data=data):
     points.columns = ['name', 'pts']
     return points[['pts', 'name']]
 
-def seconds_latest_day(data=data):
+def seconds_latest_day(data):
     return data.iloc[:, -1].dropna().sort_values().to_frame()
 
-def seconds_all_days(data=data):
+def sum_seconds(data):
     return data.sum(axis=1, skipna=False).dropna().sort_values().to_frame()
+
+def median_seconds(data):
+    return data.median(axis=1).sort_values().to_frame()

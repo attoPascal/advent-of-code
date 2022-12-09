@@ -1,22 +1,26 @@
 from dataclasses import dataclass, field
+from itertools import chain
 from aocd import lines
 
 @dataclass
-class File():
-    name: str
-    size: int
-
-@dataclass
 class Dir():
-    name: str
     parent: 'Dir'
-    content: dict = field(default_factory=dict)
+    dirs: dict = field(default_factory=dict)
+    filesize: int = 0
 
+    def mkdir(self, name):
+        self.dirs[name] = Dir(parent=self)
+    
     @property
     def size(self):
-        return sum(f.size for f in self.content.values())
+        return self.filesize + sum(d.size for d in self.dirs.values())
+    
+    @property
+    def tree(self):
+        yield self
+        yield from chain.from_iterable(d.tree for d in self.dirs.values())
 
-root = Dir('/', parent=None)
+root = Dir(parent=None)
 cwd = None
 
 for line in lines:
@@ -25,19 +29,14 @@ for line in lines:
             cwd = root
         case '$', 'cd', '..':
             cwd = cwd.parent
-        case '$', 'cd', dirname:
-            cwd = cwd.content[dirname]
+        case '$', 'cd', name:
+            cwd = cwd.dirs[name]
         case '$', 'ls':
             pass
         case 'dir', name:
-            cwd.content[name] = Dir(name, parent=cwd)
+            cwd.mkdir(name)
         case size, name:
-            cwd.content[name] = File(name, int(size))
+            cwd.filesize += int(size)
 
-def all_dirs(cwd=root):
-    yield cwd
-    for f in cwd.content.values():
-        yield from all_dirs(f) if isinstance(f, Dir) else ()
-
-print("Part 1:", sum(dir.size for dir in all_dirs() if dir.size <= 100000))
-print("Part 2:", min(dir.size for dir in all_dirs() if dir.size >= root.size - 40000000))
+print("Part 1:", sum(d.size for d in root.tree if d.size <= 100000))
+print("Part 2:", min(d.size for d in root.tree if d.size >= root.size - 40000000))
