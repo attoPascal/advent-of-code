@@ -9,18 +9,25 @@ from aocd import data
 @dataclass
 class Monkey:
     items: list[int]
-    op: CodeType
+    op: CodeType | str
     divisor: int
     if_true: int
     if_false: int
     handled: int = 0
 
-    operation = lambda self, old: eval(self.op)
-    test = lambda self, n: n % self.divisor == 0
+    def __post_init__(self):
+        if isinstance(self.op, str):
+            self.op = compile(self.op, '<string>', 'eval')
+
+    def operation(self, old: int) -> int:
+        return eval(self.op)
+    
+    def test(self, number: int) -> int:
+        return number % self.divisor == 0
 
 def parse_monkey(spec: str) -> Monkey:
     items = [int(n) for n in re.findall(r'Starting items: (.+)', spec)[0].split(', ')]
-    op = compile(re.findall(r'Operation: new = (.+)', spec)[0], '<string>', 'eval')
+    op = re.findall(r'Operation: new = (.+)', spec)[0]
     divisor = int(re.findall(r'Test: divisible by (\d+)', spec)[0])
     throw = [int(n) for n in re.findall(r'If \w+: throw to monkey (\d+)', spec)]
     

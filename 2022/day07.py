@@ -1,22 +1,23 @@
 from dataclasses import dataclass, field
 from itertools import chain
+from typing import Iterable, Self
 from aocd import lines
 
 @dataclass
 class Dir():
-    parent: 'Dir'
+    parent: Self | None
     dirs: dict = field(default_factory=dict)
     filesize: int = 0
 
-    def mkdir(self, name):
+    def mkdir(self, name: str):
         self.dirs[name] = Dir(parent=self)
     
     @property
-    def size(self):
+    def size(self) -> int:
         return self.filesize + sum(d.size for d in self.dirs.values())
     
     @property
-    def tree(self):
+    def tree(self) -> Iterable[Self]:
         yield self
         yield from chain.from_iterable(d.tree for d in self.dirs.values())
 
