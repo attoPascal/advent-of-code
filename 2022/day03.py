@@ -1,11 +1,8 @@
-from functools import reduce
-
 from aocd import lines
 from more_itertools import chunked, divide, one
 
-
 def common_item(collections):
-    return one(reduce(set.intersection, collections[1:], set(collections[0])))
+    return one(set(collections[0]).intersection(*collections[1:]))
 
 def priority(item):
     return ord(item) - 38 if item.isupper() else ord(item) - 96
