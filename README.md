@@ -1,6 +1,6 @@
 # Advent of Code
 
-https://adventofcode.com
+<https://adventofcode.com>
 
     [2022] 50*
     [2021] 50*
@@ -9,5 +9,6 @@ https://adventofcode.com
     [2018] 15*
     [2017]    
     [2016]    
-    [2015] 35*
-    Total stars: 237*
+    [2015] 43*
+
+    Total stars: 245*
