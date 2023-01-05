@@ -1,14 +1,14 @@
 from intcode import Intcode
 from collections import deque
 import numpy as np
+import aocd
 
-with open('input13.txt') as f:
-    instructions = [int(n) for n in f.read().split(',')]
+instructions = [int(n) for n in aocd.get_data(day=13, year=2019).split(',')]
 
 def run(part):
     input = deque()
     output = deque()
-    intcode = Intcode(instructions, input=input, output=output)
+    intcode = Intcode(instructions, input, output)
     intcode.memory[0] = part
 
     screen = np.zeros((44, 24))

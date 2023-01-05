@@ -1,10 +1,11 @@
 from collections import deque
+from typing import Optional, Callable
 
-Input = deque
-Output = deque
+Input = deque[int] | list[int] | Callable[[], int]
+Output = deque[int] | list[int] | Callable[[int], None]
 
 class Intcode():
-    ops = {
+    ops: dict[int, tuple[str, int, int]] = {
         # op, num_reads, num_writes
         1:  ('add', 2, 1),
         2:  ('mul', 2, 1),
@@ -18,11 +19,26 @@ class Intcode():
         99: ('hlt', 0, 0)
     }
     
-    def __init__(self, memory, input=None, output=None, extend_memory=1000):
+    def __init__(self, memory: list[int], inp: Optional[Input] = None, out: Optional[Output] = None, extend_memory=1000):
         self.memory = memory.copy() + [0]*extend_memory
         
-        self.input = input.popleft if hasattr(input, 'popleft') else input
-        self.output = output.append if hasattr(output, 'append') else output
+        match inp:
+            case deque():
+                self.input = inp.popleft
+            case list():
+                self.input = lambda: inp.pop(0)
+            case None:
+                self.input = lambda: int(input())
+            case callable:
+                self.input = callable
+
+        match out:
+            case deque() | list():
+                self.output = out.append
+            case None:
+                self.output = print
+            case callable:
+                self.output = callable
         
         self.ptr = 0
         self.base = 0
@@ -52,12 +68,12 @@ class Intcode():
         self.fetch()
         self.exec()
     
-    def getargs(self, ptr):
+    def getargs(self, ptr) -> tuple[str, list[int]]:
         instr = self.memory[ptr]
         opcode = instr % 100
         instr //= 100
         op, ninputs, noutputs = self.ops[opcode]
-        args = []
+        args: list[int] = []
         for i in range(ninputs+noutputs):
             parmode = instr % 10
             instr //= 10
@@ -83,11 +99,10 @@ class Intcode():
         self.memory[p3] = p1 * p2
     
     def inp(self, p1):
-        self.memory[p1] = int(self.input()) if self.input else int(input())
+        self.memory[p1] = self.input()
     
     def out(self, p1):
-        output = self.output if self.output else print
-        output(p1)
+        self.output(p1)
 
     def jit(self, p1, p2):
         if p1:
