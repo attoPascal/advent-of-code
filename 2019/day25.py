@@ -1,11 +1,7 @@
-# To add a new cell, type '# %%'
-# To add a new markdown cell, type '# %% [markdown]'
-# %%
 import aocd
-from intcode import Intcode, Input
+from intcode import Intcode
+from collections import deque
 
-
-# %%
 data = aocd.get_data(day=25, year=2019)
 instructions = [int(n) for n in data.split(',')]
 
@@ -45,7 +41,7 @@ take weather machine
 east
 """]
 
-deque = Input(actions)
+input_deque = deque(actions)
 
 for n in range(256):
     s = ""
@@ -58,17 +54,14 @@ for n in range(256):
     s += "take antenna\n" if (64 & n) else "drop antenna\n"
     s += "take weather machine\n" if (128 & n) else "drop weather machine\n"
     s += "south\n"
-    deque.extend([ord(c) for c in s])
+    input_deque.extend([ord(c) for c in s])
 
 def inp():
-    if len(deque) == 0:
-        deque.extend([ord(c) for c in input()] + [10])
-    return deque.popleft()
+    if len(input_deque) == 0:
+        input_deque.extend([ord(c) for c in input()] + [10])
+    return input_deque.popleft()
 
 def out(o):
     print(chr(o), end='')
 
-Intcode(instructions, input=inp, output=out).run()
-
-
-# %%
+Intcode(instructions, inp, out).run()
